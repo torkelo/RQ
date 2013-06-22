@@ -2,7 +2,7 @@
     rq.js
 
     Douglas Crockford
-    2013-05-17
+    2013-06-21
     Public Domain
 
 This package uses four kinds of functions:
@@ -84,7 +84,7 @@ RQ.fallback(requestors, milliseconds)
     succeeds, then the fallback succeeds.
 
     If the optional milliseconds argument is supplied, then if a request is not
-    successful in the alotted time, then the fallback fails, and the pending
+    successful in the allotted time, then the fallback fails, and the pending
     request is quashed.
 
 
@@ -97,7 +97,7 @@ RQ.race(requestors [, milliseconds])
     requestors fail, then the race fails.
 
     If the optional milliseconds argument is supplied, then if a request is
-    not successful in the alotted time, then the race fails, and all pending
+    not successful in the allotted time, then the race fails, and all pending
     requests are quashed.
 
 
@@ -188,8 +188,8 @@ var RQ = (function () {
     return {
         fallback : function fallback(requestors, milliseconds) {
 
-// fallback takes an array of requestor functions, and returns a requestor that
-// will call them each in order until it finds a successful outcome.
+// RQ.fallback takes an array of requestor functions, and returns a requestor
+// that will call them each in order until it finds a successful outcome.
 
 // If all of the requestor functions fail, then the fallback fails. If the time
 // expires, then work in progress is canceled.
@@ -265,7 +265,10 @@ var RQ = (function () {
         parallel: function parallel(requestors, optionals, milliseconds,
                 tilliseconds) {
 
-// The optionals parameter is optional.
+// RQ.parallel takes an array of requestors, and an optional second array of
+// requestors, and starts them all. It succeeds if all of the requestors in
+// the first array finish successfully before the time expires. The result
+// is an array collecting the results of all of the requestors.
 
             if (typeof optionals === 'number') {
                 milliseconds = optionals;
@@ -393,8 +396,8 @@ var RQ = (function () {
                                                     : quash(failure);
                                             }
                                             if (timeout_till) {
-                                                timeout_till = null;
                                                 clearTimeout(timeout_till);
+                                                timeout_till = null;
                                             }
                                         }
                                     }
@@ -414,9 +417,9 @@ var RQ = (function () {
         race: function race(requestors, milliseconds) {
 
 // RQ.race takes an array of requestor functions. It starts them all
-// immediately. The first to finish wins. RQ.race is successful if any
+// immediately. The first to finish wins. A race is successful if any
 // contestant is successful. It fails if all requestors fail or if the time
-// expired.
+// expires.
 
             check("RQ.race", requestors, milliseconds);
             return function requestor(requestion, initial) {
@@ -479,9 +482,9 @@ var RQ = (function () {
         },
         sequence: function sequence(requestors, milliseconds) {
 
-// sequence takes an array of requestor functions, and returns a requestor that
-// will call them each in order. An initial value is passed to each, which is
-// the previous success result.
+// RQ.sequence takes an array of requestor functions, and returns a requestor
+// that will call them each in order. An initial value is passed to each, which
+// is the previous success result.
 
 // If any of the requestor functions fails, then the whole sequence fails, and
 // the remaining requestors are not called.
