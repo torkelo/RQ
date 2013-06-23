@@ -2,7 +2,7 @@
     rq.js
 
     Douglas Crockford
-    2013-06-21
+    2013-06-22
     Public Domain
 
 This package uses four kinds of functions:
@@ -332,7 +332,7 @@ var RQ = (function () {
                     }, milliseconds);
 
 // tilliseconds, if specified, gives more time for the optional requestors to
-// complete. Normally, the optional requestors have until all of the requestors
+// complete. Normally, the optional requestors have until all of the required
 // requestors finish. If tilliseconds is larger than milliseconds, milliseconds
 // wins.
 
