@@ -486,7 +486,7 @@ var RQ = (function () {
 // that will call them each in order. An initial value is passed to each, which
 // is the previous success result.
 
-// If any of the requestor functions fails, then the whole sequence fails, and
+// If any of the requestor functions fail, then the whole sequence fails, and
 // the remaining requestors are not called.
 
             check("RQ.sequence", requestors, milliseconds);
