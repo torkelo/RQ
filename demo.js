@@ -1,4 +1,12 @@
-function widget(name) {
+// demo.js
+
+// This is used by demo.html to demonstrate rq.js. It include a WIDGET function
+// that represents a service requestory, a SHOW function that is a requestion
+// that displays the final result, and an RQ program written as an annotated
+// nested array.
+
+
+function WIDGET(name) {
     return function requestor(requestion, value) {
         var result = value ? value + '>' + name : name,
             fieldset = demo.tag('fieldset'),
@@ -26,7 +34,7 @@ function widget(name) {
     };
 }
 
-function show(success, failure) {
+function SHOW(success, failure) {
     var result, title, color;
     if (failure === undefined) {
         result = success;
@@ -49,46 +57,46 @@ function show(success, failure) {
 
 RQ.parallel([
     RQ.sequence([
-        widget('Seq A1'),
-        widget('Seq A2'),
-        widget('Seq A3')
+        WIDGET('Seq A1'),
+        WIDGET('Seq A2'),
+        WIDGET('Seq A3')
     ]),
     RQ.sequence([
-        widget('Seq B1'),
-        widget('Seq B2'),
-        widget('Seq B3')
+        WIDGET('Seq B1'),
+        WIDGET('Seq B2'),
+        WIDGET('Seq B3')
     ]),
-    widget('C'),
+    WIDGET('C'),
     RQ.race([
-        widget('Race D1'),
-        widget('Race D2'),
-        widget('Race D3'),
+        WIDGET('Race D1'),
+        WIDGET('Race D2'),
+        WIDGET('Race D3'),
     ]),
     RQ.fallback([
-        widget('Fall E1'),
-        widget('Fall E2'),
-        widget('Fall E3')
+        WIDGET('Fall E1'),
+        WIDGET('Fall E2'),
+        WIDGET('Fall E3')
     ])
 ], [
     RQ.sequence([
-        widget('Opt Seq O1'),
-        widget('Opt Seq O2'),
-        widget('Opt Seq O3')
+        WIDGET('Opt Seq O1'),
+        WIDGET('Opt Seq O2'),
+        WIDGET('Opt Seq O3')
     ]),
     RQ.sequence([
-        widget('Opt Seq P1'),
-        widget('Opt Seq P2'),
-        widget('Opt Seq P3')
+        WIDGET('Opt Seq P1'),
+        WIDGET('Opt Seq P2'),
+        WIDGET('Opt Seq P3')
     ]),
-    widget('Opt Q'),
+    WIDGET('Opt Q'),
     RQ.race([
-        widget('Opt Race R1'),
-        widget('Opt Race R2'),
-        widget('Opt Race R3'),
+        WIDGET('Opt Race R1'),
+        WIDGET('Opt Race R2'),
+        WIDGET('Opt Race R3'),
     ]),
     RQ.fallback([
-        widget('Opt Fall S1'),
-        widget('Opt Fall S2'),
-        widget('Opt Fall S3')
+        WIDGET('Opt Fall S1'),
+        WIDGET('Opt Fall S2'),
+        WIDGET('Opt Fall S3')
     ])
-])(show);
+])(SHOW);
