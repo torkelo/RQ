@@ -1,0 +1,55 @@
+<html>
+<head>
+<style>
+body {
+    background-color: gray;
+}
+
+fieldset {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 0.5em;
+    float: left;
+    margin: 0.5em;
+}
+
+legend {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 0.5em;
+    font-size: xx-large;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+input:hover {
+    color: white;
+}
+</style>
+<title>RQ Demo</title>
+</head>
+<body>
+<script>
+if (typeof window.setImmediate !== 'function') {
+    window.setImmediate = function (func){
+        var args = arguments;
+        return window.setTimeout(function () {
+            return func.apply(undefined, args);
+        }, 0);
+    };
+    window.clearImmediate = window.clearTimeout;
+}
+</script>
+<script src=adsafe.js></script>
+<script src=rq.js></script>
+<div id=DEMO_>
+<script>
+var demo;
+ADSAFE.go("DEMO_", function (dom) {
+    "use strict";
+    demo = dom;
+});
+</script>
+</div>
+<script src=demo.js></script>
+</body></html>
