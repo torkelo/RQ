@@ -71,46 +71,64 @@ requestors:
     RQ.parallel(requestors, optionals, milliseconds, tilliseconds)
     RQ.sequence(requestors, milliseconds)
 
-All four of these requestory function return a quash function.
+Each of these four requestory functions returns a requestor function that
+returns a quash function.
 
 
 RQ.fallback(requestors, milliseconds)
 
-    RQ.fallback takes an array of requestor functions. It returns a requestor
-    function. The requestor will call the first element in the requestors
-    array. If it is ultimately successful, its value will be passed to the
-    requestion. But if it fails, the next element will be called, and so on.
-    If none of the elements are successful, then the fallback fails. If any
-    succeeds, then the fallback succeeds.
+    RQ.fallback returns a requestor function that will call the first element
+    in the requestors array. If that is ultimately successful, its value will
+    be passed to the requestion. But if it fails, the next element will be
+    called, and so on. If none of the elements are successful, then the
+    fallback fails. If any succeeds, then the fallback succeeds.
 
     If the optional milliseconds argument is supplied, then if a request is not
     successful in the allotted time, then the fallback fails, and the pending
-    request is quashed.
+    requestor is cancelled.
 
 
 RQ.race(requestors [, milliseconds])
-    returns a requestor function
 
-    RQ.race takes an array of requestor functions. It starts them all in
-    parallel. Its result is the result of the first requestor to successfully
-    finish and all of the other requests are cancelled. If all of the
-    requestors fail, then the race fails.
+    RQ.race returns a requestor that starts all of the functions in the
+    requestors array in parallel. Its result is the result of the first of
+    those requestors to successfully finish (all of the other requestors are
+    cancelled). If all of those requestors fail, then the race fails.
 
-    If the optional milliseconds argument is supplied, then if a request is
-    not successful in the allotted time, then the race fails, and all pending
-    requests are quashed.
+    If the optional milliseconds argument is supplied, then if no requestor has
+    been successful in the allotted time, then the race fails, and all pending
+    requestors are cancelled.
 
 
 RQ.parallel(requestors [, milliseconds])
 RQ.parallel(requestors, optionals [, milliseconds, [tilliseconds]])
 
-    RQ.parallel processes many requests in parallel, producing an array of all
-    of the successful results. It can take two arrays of requests: Those that
-    are required to produce results, and those that may optionally produce
-    results.
+    RQ.parallel returns a requestor that processes many requestors in parallel,
+    producing an array of all of the successful results. It can take two arrays
+    of requests: Those that are required to produce results, and those that may
+    optionally produce results. Each of the optional requestors has until all
+    of the required requestors have finished, or until the optional
+    tilliseconds timer has expired.
 
+    The result maps the requestors and optionals into a single array. The
+    value produced by the first element of the requestors array provides the
+    first element of the result.
 
+    If the optional milliseconds argument is supplied, then if all of the
+    required requestors are not successful in the allotted time, then this
+    fails. If there are no required requestors, and if at least one optional
+    requestor is successful within the allotted time, then this succeeds.
 
+RQ.sequence(requestors [, milliseconds])
+
+    RQ.sequence returns a requestor that processes each element of the
+    requestors array one at a time. Each will be passed the result of the
+    previous. If all succeed, then the sequence succeeds, having the result of
+    the last of the requestors. If any fail, then the sequence fails.
+
+    If the optional milliseconds argument is supplied, then if all of the
+    requestors have not all completed in the allotted time, then the sequence
+    fails and the pending requestor is cancelled.
 */
 
 /*global
@@ -126,6 +144,9 @@ var RQ = (function () {
     'use strict';
 
     function expired(method, milliseconds) {
+
+// Make an expired exception.
+
         return {
             name: "expired",
             method: method,
@@ -192,7 +213,7 @@ var RQ = (function () {
 // that will call them each in order until it finds a successful outcome.
 
 // If all of the requestor functions fail, then the fallback fails. If the time
-// expires, then work in progress is canceled.
+// expires, then work in progress is cancelled.
 
             check("RQ.fallack", requestors, milliseconds);
             return function requestor(requestion, initial) {
