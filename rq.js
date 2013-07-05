@@ -40,7 +40,7 @@ requestion(success, failure)
     requestion function as the success parameter, and the failure parameter
     will be undefined. If the request fails, then the requestion function will
     be passed the reason as the failure parameter. If failure is undefined,
-    the then request succeeded. If failure is any other value, then the request
+    then the request succeeded. If failure is any other value, then the request
     failed.
 
 
@@ -115,9 +115,11 @@ RQ.parallel(requestors, optionals [, milliseconds, [tilliseconds]])
     first element of the result.
 
     If the optional milliseconds argument is supplied, then if all of the
-    required requestors are not successful in the allotted time, then this
-    fails. If there are no required requestors, and if at least one optional
-    requestor is successful within the allotted time, then this succeeds.
+    required requestors are not successful in the allotted time, then the
+    parallel fails. If there are no required requestors, and if at least one
+    optional requestor is successful within the allotted time, then the
+    parallel succeeds.
+
 
 RQ.sequence(requestors [, milliseconds])
 
