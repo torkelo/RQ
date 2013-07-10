@@ -5,54 +5,63 @@
 // that displays the final result, and an RQ program written as an annotated
 // nested array.
 
+/*global document, RQ */
 
 function WIDGET(name) {
+    'use strict';
     return function requestor(requestion, value) {
         var result = value ? value + '>' + name : name,
-            fieldset = demo.tag('fieldset'),
-            legend = demo.tag('legend')
-                .value(name),
-            success = demo.tag('input', 'button', 'success')
-                .value('success')
-                .on('click', function () {
-                    fieldset.style('backgroundColor', 'lightgreen');
-                    return requestion(result);
-                }),
-            failure = demo.tag('input', 'button', 'failure')
-                .value('failure')
-                .on('click', function () {
-                    fieldset.style('backgroundColor', 'pink');
-                    return requestion(undefined, result);
-                });
-        fieldset.append(legend);
-        fieldset.append(success);
-        fieldset.append(failure);
-        demo.append(fieldset);
+            demo = document.getElementById("demo"),
+            fieldset = document.createElement("fieldset"),
+            legend = document.createElement("legend"),
+            success = document.createElement("input"),
+            failure = document.createElement("input");
+        fieldset.appendChild(legend);
+        fieldset.appendChild(success);
+        fieldset.appendChild(failure);
+        legend.appendChild(document.createTextNode(name));
+        success.type = "button";
+        success.value = "success";
+        success.addEventListener("click", function () {
+            fieldset.style.backgroundColor = "lightgreen";
+            return requestion(result);
+        }, false);
+        failure.type = "button";
+        failure.value = "failure";
+        failure.addEventListener("click", function () {
+            fieldset.style.backgroundColor = "pink";
+            return requestion(undefined, result);
+        }, false);
+        demo.appendChild(fieldset);
         return function quash() {
-            fieldset.style('backgroundColor', 'silver');
+            fieldset.style.backgroundColor = "silver";
         };
     };
 }
 
 function SHOW(success, failure) {
-    var result, title, color;
+    'use strict';
+    var result,
+        title,
+        color,
+        demo = document.getElementById("demo"),
+        fieldset = document.createElement("fieldset"),
+        legend = document.createElement("legend");
     if (failure === undefined) {
-        result = success;
+        result = String(success);
         title = "success";
-        color = 'lightgreen';
+        color = "lightgreen";
     } else {
-        result = failure;
+        result = String(failure);
         title = "failure";
-        color = 'pink';
+        color = "pink";
     }
-    demo.append(
-        demo.tag('fieldset')
-            .style('backgroundColor', color)
-            .append(demo.tag('legend')
-                .value(title)
-                .style('backgroundColor', color))
-            .append(JSON.stringify(result))
-    );
+    fieldset.appendChild(legend);
+    legend.appendChild(document.createTextNode(title));
+    fieldset.appendChild(document.createTextNode(JSON.stringify(result)));
+    fieldset.style.backgroundColor = color;
+    legend.style.backgroundColor = color;
+    demo.appendChild(fieldset);
 }
 
 RQ.parallel([
@@ -70,7 +79,7 @@ RQ.parallel([
     RQ.race([
         WIDGET('Race D1'),
         WIDGET('Race D2'),
-        WIDGET('Race D3'),
+        WIDGET('Race D3')
     ]),
     RQ.fallback([
         WIDGET('Fall E1'),
@@ -92,7 +101,7 @@ RQ.parallel([
     RQ.race([
         WIDGET('Opt Race R1'),
         WIDGET('Opt Race R2'),
-        WIDGET('Opt Race R3'),
+        WIDGET('Opt Race R3')
     ]),
     RQ.fallback([
         WIDGET('Opt Fall S1'),

@@ -2,8 +2,7 @@
 <html>
 <head>
 <meta name="description" content="This file demonstrates rq.js.
-    It uses adsafe.js (https://github.com/douglascrockford/ADsafe)
-    and demo.js.">
+    It uses demo.js.">
 <title>RQ Demo</title>
 <style>
 body {
@@ -36,8 +35,11 @@ input:hover {
 <script>
 // Some browsers do not yet implement setImmediate.
 
+/*global window */
+
 if (typeof window.setImmediate !== 'function') {
-    window.setImmediate = function (func){
+    window.setImmediate = function (func) {
+        'use strict';
         var args = arguments;
         return window.setTimeout(function () {
             return func.apply(undefined, args);
@@ -46,16 +48,7 @@ if (typeof window.setImmediate !== 'function') {
     window.clearImmediate = window.clearTimeout;
 }
 </script>
-<script src=adsafe.js></script>
+<div id=demo></div>
 <script src=rq.js></script>
-<div id=DEMO_>
-<script>
-var demo;
-ADSAFE.go("DEMO_", function (dom) {
-    "use strict";
-    demo = dom;
-});
-</script>
-</div>
 <script src=demo.js></script>
 </body></html>
