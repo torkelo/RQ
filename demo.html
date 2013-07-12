@@ -26,8 +26,18 @@ legend {
     padding-right: 0.5em;
 }
 
-input:hover {
-    color: white;
+input {
+    border: 2px solid black;
+}
+
+input[value="success"]:hover {
+    background-color: lightgreen;
+    border: 2px solid green;
+}
+
+input[value="failure"]:hover {
+    background-color: pink;
+    border: 2px solid red;
 }
 </style>
 </head>
