@@ -389,7 +389,7 @@ var RQ = (function () {
                                 },
                                 initial
                             );
-                            if (quashes[index] === undefined) {
+                            if (quashes && quashes[index] === undefined) {
                                 quashes[index] = cancel;
                             }
                         });
